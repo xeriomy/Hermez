@@ -28,16 +28,13 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
       
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-        working-directory: .
-      
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
         with:
-          gradle-version: 8.4
+          android-version: 34
+          build-tools-version: 34.0.0
+          ndk-version: 26.2.11394342
       
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
@@ -50,9 +47,11 @@ jobs:
             ${{ runner.os }}-gradle-
       
       - name: Run lint
-        run: ./gradlew lintDebug --stacktrace
+        run: ./gradlew lintDebug --stacktrace --no-daemon
         working-directory: .
         continue-on-error: false
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
       
       - name: Upload lint report
         if: always()
@@ -63,9 +62,11 @@ jobs:
           retention-days: 30
       
       - name: Run unit tests
-        run: ./gradlew testDebugUnitTest --stacktrace
+        run: ./gradlew testDebugUnitTest --stacktrace --no-daemon
         working-directory: .
         continue-on-error: false
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
       
       - name: Upload test results
         if: always()
@@ -76,9 +77,11 @@ jobs:
           retention-days: 30
       
       - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --stacktrace --no-daemon
         working-directory: .
         continue-on-error: false
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
       
       - name: Upload debug APK
         if: success()
@@ -89,15 +92,11 @@ jobs:
           retention-days: 30
       
       - name: Build release APK
-        run: ./gradlew assembleRelease --stacktrace
+        run: ./gradlew assembleRelease --stacktrace --no-daemon
         working-directory: .
         continue-on-error: false
         env:
-          # For release builds, we need signing config
-          # In CI, we'll use a debug keystore for now
-          ANDROID_KEYSTORE_PASSWORD: android
-          ANDROID_KEY_ALIAS: androiddebugkey
-          ANDROID_KEY_PASSWORD: android
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
       
       - name: Upload release APK
         if: success()
@@ -106,9 +105,3 @@ jobs:
           name: hermes-android-release
           path: app/build/outputs/apk/release/app-release-unsigned.apk
           retention-days: 30
-      
-      - name: Clean up on failure
-        if: failure()
-        run: |
-          echo "Build failed, cleaning up..."
-          ./gradlew clean --stacktrace

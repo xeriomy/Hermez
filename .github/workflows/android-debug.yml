@@ -30,16 +30,12 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
       
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-        working-directory: .
-      
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v3
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
         with:
-          gradle-version: 8.4
+          android-version: 34
+          build-tools-version: 34.0.0
       
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
@@ -52,11 +48,10 @@ jobs:
             ${{ runner.os }}-gradle-
       
       - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --stacktrace --no-daemon
         working-directory: .
         env:
-          # Debug build doesn't need signing
-          ANDROID_DEBUG: true
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
       
       - name: Get build info
         id: build-info
@@ -88,7 +83,7 @@ jobs:
             app/build/outputs/apk/debug/hermes-android-*.apk
             app/build/outputs/apk/debug/version-info.txt
           retention-days: 90
-          compression-level: 0  # No compression for APK
+          compression-level: 0
       
       - name: Create release notes
         id: release-notes
