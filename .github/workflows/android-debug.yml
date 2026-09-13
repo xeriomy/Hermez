@@ -33,9 +33,11 @@ jobs:
       
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+      
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
         with:
-          android-version: 34
-          build-tools-version: 34.0.0
+          gradle-version: 8.4
       
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
@@ -50,8 +52,6 @@ jobs:
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace --no-daemon
         working-directory: .
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
       
       - name: Get build info
         id: build-info
