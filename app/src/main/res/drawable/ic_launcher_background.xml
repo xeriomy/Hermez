@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item>
-        <shape android:shape="oval">
-            <solid android:color="@color/primary"/>
-        </shape>
-    </item>
-</resources>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="@color/primary"
+        android:pathData="M54,108C24.32,108,0,83.68,0,54C0,24.32,24.32,0,54,0C83.68,0,108,24.32,108,54C108,83.68,83.68,108,54,108Z"/>
+</vector>
