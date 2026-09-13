@@ -17,6 +17,17 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose") version "1.5.4" apply false
 }
 
+// Add dependency resolution strategy for Android plugins
+configurations.all {
+    resolutionStrategy {
+        eachDependency { DependencyResolveDetails details ->
+            if (details.requested.group == "org.jetbrains.kotlin.plugin.compose" && details.requested.version == "1.5.4") {
+                details.useVersion "1.6.10"
+            }
+        }
+    }
+}
+
 tasks.named("clean") {
     doLast {
         println("Cleaning Hermes Android project")
