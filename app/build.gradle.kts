@@ -93,6 +93,9 @@ dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     
+    // Material Components for Android (required for Material 3 themes in resources)
+    implementation("com.google.android.material:material:1.11.0")
+    
     // Compose
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("androidx.compose.ui:ui:1.5.4")
