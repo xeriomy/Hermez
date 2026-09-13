@@ -4,7 +4,7 @@
 
 <resources>
     <!-- Material 3 Day Theme -->
-    <style name="HermesTheme" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="HermesTheme" parent="Theme.Material3.DayNight">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryContainer">@color/primary_container</item>
         <item name="colorOnPrimary">@color/on_primary</item>
