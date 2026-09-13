@@ -23,7 +23,7 @@ No local setup is required. All builds run on GitHub Actions runners with:
 - Ubuntu Linux
 - JDK 17 (Temurin)
 - Android SDK (automatically downloaded)
-- Gradle 8.4
+- Gradle 8.6
 
 ## Project Structure
 
@@ -58,7 +58,7 @@ hermes-android/
 **Steps:**
 1. Checkout repository
 2. Set up JDK 17 (Temurin)
-3. Set up Gradle 8.4
+3. Set up Gradle 8.6
 4. Cache Gradle dependencies
 5. Run Android lint
 6. Run unit tests
@@ -82,7 +82,7 @@ hermes-android/
 **Steps:**
 1. Checkout repository
 2. Set up JDK 17 (Temurin)
-3. Set up Gradle 8.4
+3. Set up Gradle 8.6
 4. Cache Gradle dependencies
 5. Build debug APK
 6. Rename APK with version info
@@ -223,7 +223,7 @@ The project pins specific versions for reproducibility:
 |------|---------|------------------------|
 | JDK | 17 | `.github/workflows/*.yml` |
 | Android Gradle Plugin | 8.4.0 | `build.gradle.kts` |
-| Gradle | 8.4 | `.github/workflows/*.yml` |
+| Gradle | 8.6 | `.github/workflows/*.yml` |
 | Kotlin | 1.9.22 | `build.gradle.kts` |
 | Compose | 1.5.4 | `app/build.gradle.kts` |
 | compileSdk | 34 | `app/build.gradle.kts` |
