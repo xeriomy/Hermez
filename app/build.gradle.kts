@@ -27,7 +27,7 @@ android {
         
         // Required for Android 12+ networking
         androidResources {
-            generateLocaleConfig = true
+            generateLocaleConfig = false
         }
     }
     
