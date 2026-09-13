@@ -14,18 +14,7 @@ buildscript {
 plugins {
     id("com.android.application") version "8.4.0" apply false
     id("org.jetbrains.kotlin.android") version "1.9.22" apply false
-    id("org.jetbrains.kotlin.plugin.compose") version "1.5.4" apply false
-}
-
-// Add dependency resolution strategy for Android plugins
-configurations.all {
-    resolutionStrategy {
-        eachDependency { DependencyResolveDetails details ->
-            if (details.requested.group == "org.jetbrains.kotlin.plugin.compose" && details.requested.version == "1.5.4") {
-                details.useVersion "1.6.10"
-            }
-        }
-    }
+    id("org.jetbrains.kotlin.plugin.compose") version "1.6.10" apply false
 }
 
 tasks.named("clean") {
