@@ -57,9 +57,9 @@ android {
     
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs += [
+        freeCompilerArgs += listOf(
             "-P", "plugin:androidx.compose.compiler.plugins.kotlin:generateMainResolvableAnnotations=true"
-        ]
+        )
     }
     
     buildFeatures {
