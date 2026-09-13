@@ -49,7 +49,7 @@ jobs:
             ${{ runner.os }}-gradle-
       
       - name: Build debug APK
-        run: gradle assembleDebug --stacktrace --no-daemon
+        run: gradle :app:assembleDebug --stacktrace --no-daemon
         working-directory: .
       
       - name: Get build info

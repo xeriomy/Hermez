@@ -47,7 +47,7 @@ jobs:
             ${{ runner.os }}-gradle-
       
       - name: Run lint
-        run: gradle lintDebug --stacktrace --no-daemon
+        run: gradle :app:lintDebug --stacktrace --no-daemon
         working-directory: .
         continue-on-error: false
       
@@ -60,7 +60,7 @@ jobs:
           retention-days: 30
       
       - name: Run unit tests
-        run: gradle testDebugUnitTest --stacktrace --no-daemon
+        run: gradle :app:testDebugUnitTest --stacktrace --no-daemon
         working-directory: .
         continue-on-error: false
       
@@ -73,7 +73,7 @@ jobs:
           retention-days: 30
       
       - name: Build debug APK
-        run: gradle assembleDebug --stacktrace --no-daemon
+        run: gradle :app:assembleDebug --stacktrace --no-daemon
         working-directory: .
         continue-on-error: false
       
@@ -86,7 +86,7 @@ jobs:
           retention-days: 30
       
       - name: Build release APK
-        run: gradle assembleRelease --stacktrace --no-daemon
+        run: gradle :app:assembleRelease --stacktrace --no-daemon
         working-directory: .
         continue-on-error: false
       
