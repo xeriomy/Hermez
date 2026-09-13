@@ -31,10 +31,11 @@ jobs:
       
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+      
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
         with:
-          android-version: 34
-          build-tools-version: 34.0.0
-          ndk-version: 26.2.11394342
+          gradle-version: 8.4
       
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
@@ -50,8 +51,6 @@ jobs:
         run: ./gradlew lintDebug --stacktrace --no-daemon
         working-directory: .
         continue-on-error: false
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
       
       - name: Upload lint report
         if: always()
@@ -65,8 +64,6 @@ jobs:
         run: ./gradlew testDebugUnitTest --stacktrace --no-daemon
         working-directory: .
         continue-on-error: false
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
       
       - name: Upload test results
         if: always()
@@ -80,8 +77,6 @@ jobs:
         run: ./gradlew assembleDebug --stacktrace --no-daemon
         working-directory: .
         continue-on-error: false
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
       
       - name: Upload debug APK
         if: success()
@@ -95,8 +90,6 @@ jobs:
         run: ./gradlew assembleRelease --stacktrace --no-daemon
         working-directory: .
         continue-on-error: false
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
       
       - name: Upload release APK
         if: success()
