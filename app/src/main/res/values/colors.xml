@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hermes Android Client - Colors -->
+<!-- This file is part of the Hermes Android project -->
+
+<resources>
+    <!-- Material 3 Theme Colors -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- App-specific colors -->
+    <color name="primary">#FF6200EE</color>
+    <color name="primary_container">#FFEADDFF</color>
+    <color name="on_primary">#FFFFFFFF</color>
+    <color name="on_primary_container">#FF21005E</color>
+    
+    <color name="secondary">#FF03DAC5</color>
+    <color name="secondary_container">#FFCCE8E6</color>
+    <color name="on_secondary">#FFFFFFFF</color>
+    <color name="on_secondary_container">#FF001F24</color>
+    
+    <color name="surface">#FFFFFBFE</color>
+    <color name="on_surface">#FF1C1B1F</color>
+    <color name="surface_variant">#FFE7E0EC</color>
+    <color name="on_surface_variant">#FF49454F</color>
+    
+    <color name="background">#FFFFFBFE</color>
+    <color name="on_background">#FF1C1B1F</color>
+    
+    <color name="error">#FFB3261E</color>
+    <color name="on_error">#FFFFFFFF</color>
+    <color name="error_container">#FFF9DEDC</color>
+    <color name="on_error_container">#FF410E0B</color>
+    
+    <color name="outline">#FF79747E</color>
+    
+    <!-- Semantic colors -->
+    <color name="success">#FF00897B</color>
+    <color name="warning">#FFF57F17</color>
+    <color name="info">#FF039BE5</color>
+    
+    <!-- Status colors -->
+    <color name="status_connected">#FF00897B</color>
+    <color name="status_connecting">#FFF57F17</color>
+    <color name="status_disconnected">#FFB3261E</color>
+</resources>

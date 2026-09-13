@@ -1,0 +1,127 @@
+name: Android Debug Build
+
+# Hermes Android Debug Build Workflow
+# This workflow can be manually triggered to build a debug APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for triggering the build'
+        required: false
+        default: 'Manual trigger'
+
+jobs:
+  debug-build:
+    name: Build Debug APK
+    runs-on: ubuntu-latest
+    
+    # Set timeout for the job
+    timeout-minutes: 45
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+      
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        working-directory: .
+      
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.4
+      
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts', '**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --stacktrace
+        working-directory: .
+        env:
+          # Debug build doesn't need signing
+          ANDROID_DEBUG: true
+      
+      - name: Get build info
+        id: build-info
+        run: |
+          echo "version_name=$(grep versionName app/build.gradle.kts | sed 's/.*versionName = "\([^"]*\)".*/\1/')" >> $GITHUB_OUTPUT
+          echo "version_code=$(grep versionCode app/build.gradle.kts | sed 's/.*versionCode = \([0-9]*\).*/\1/')" >> $GITHUB_OUTPUT
+          echo "build_time=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
+      
+      - name: Rename APK with version info
+        run: |
+          VERSION_NAME=${{ steps.build-info.outputs.version_name }}
+          VERSION_CODE=${{ steps.build-info.outputs.version_code }}
+          BUILD_TIME=${{ steps.build-info.outputs.build_time }}
+          
+          # Create version info file
+          echo "Version: $VERSION_NAME ($VERSION_CODE)" > app/build/outputs/apk/debug/version-info.txt
+          echo "Build Time: $BUILD_TIME" >> app/build/outputs/apk/debug/version-info.txt
+          echo "Commit: ${{ github.sha }}" >> app/build/outputs/apk/debug/version-info.txt
+          
+          # Rename APK
+          mv app/build/outputs/apk/debug/app-debug.apk \
+             app/build/outputs/apk/debug/hermes-android-$VERSION_NAME-$VERSION_CODE-debug.apk
+      
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: hermes-android-debug
+          path: |
+            app/build/outputs/apk/debug/hermes-android-*.apk
+            app/build/outputs/apk/debug/version-info.txt
+          retention-days: 90
+          compression-level: 0  # No compression for APK
+      
+      - name: Create release notes
+        id: release-notes
+        run: |
+          echo "### Debug Build: hermes-android-${{ steps.build-info.outputs.version_name }}-${{ steps.build-info.outputs.version_code }}" > release-notes.md
+          echo "" >> release-notes.md
+          echo "**Build Time:** ${{ steps.build-info.outputs.build_time }}" >> release-notes.md
+          echo "**Commit:** ${{ github.sha }}" >> release-notes.md
+          echo "**Trigger:** ${{ github.event.inputs.reason || 'Manual' }}" >> release-notes.md
+          echo "" >> release-notes.md
+          echo "### Download" >> release-notes.md
+          echo "The debug APK is available as a GitHub Actions artifact." >> release-notes.md
+          echo "" >> release-notes.md
+          echo "### Changes" >> release-notes.md
+          echo "See commit history for details." >> release-notes.md
+      
+      - name: Upload release notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-notes
+          path: release-notes.md
+          retention-days: 30
+      
+      - name: Output build info
+        run: |
+          echo "=== Hermes Android Debug Build ==="
+          echo "Version: ${{ steps.build-info.outputs.version_name }}"
+          echo "Version Code: ${{ steps.build-info.outputs.version_code }}"
+          echo "Build Time: ${{ steps.build-info.outputs.build_time }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "Artifact: hermes-android-debug"
+          echo ""
+          echo "To download the APK:"
+          echo "1. Go to GitHub Actions"
+          echo "2. Find this workflow run"
+          echo "3. Download the 'hermes-android-debug' artifact"

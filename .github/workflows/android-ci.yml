@@ -1,0 +1,114 @@
+name: Android CI
+
+# Hermes Android CI Workflow
+# This workflow runs on every push and pull request
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    
+    # Set timeout for the job
+    timeout-minutes: 60
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+      
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+        working-directory: .
+      
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.4
+      
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts', '**/*.gradle') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      
+      - name: Run lint
+        run: ./gradlew lintDebug --stacktrace
+        working-directory: .
+        continue-on-error: false
+      
+      - name: Upload lint report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-report
+          path: app/build/reports/lint-results-*.html
+          retention-days: 30
+      
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest --stacktrace
+        working-directory: .
+        continue-on-error: false
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: app/build/reports/tests/testDebugUnitTest/
+          retention-days: 30
+      
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --stacktrace
+        working-directory: .
+        continue-on-error: false
+      
+      - name: Upload debug APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hermes-android-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+      
+      - name: Build release APK
+        run: ./gradlew assembleRelease --stacktrace
+        working-directory: .
+        continue-on-error: false
+        env:
+          # For release builds, we need signing config
+          # In CI, we'll use a debug keystore for now
+          ANDROID_KEYSTORE_PASSWORD: android
+          ANDROID_KEY_ALIAS: androiddebugkey
+          ANDROID_KEY_PASSWORD: android
+      
+      - name: Upload release APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hermes-android-release
+          path: app/build/outputs/apk/release/app-release-unsigned.apk
+          retention-days: 30
+      
+      - name: Clean up on failure
+        if: failure()
+        run: |
+          echo "Build failed, cleaning up..."
+          ./gradlew clean --stacktrace
