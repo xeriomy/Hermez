@@ -14,7 +14,7 @@ buildscript {
 plugins {
     id("com.android.application") version "8.4.0" apply false
     id("org.jetbrains.kotlin.android") version "1.9.22" apply false
-    id("org.jetbrains.kotlin.plugin.compose") version "1.6.10" apply false
+    id("org.jetbrains.kotlin.plugin.compose") version "1.6.0" apply false
 }
 
 tasks.named("clean") {
