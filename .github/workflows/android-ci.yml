@@ -36,10 +36,6 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: 8.4
-          cache-gradle-distribution: true
-          gradle-home-cache-excludes: |
-            caches
-            notifications
       
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
