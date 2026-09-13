@@ -8,6 +8,15 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose") version "1.5.4" apply false
 }
 
+// Apply plugins in the plugins block to avoid resolution issues
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
 tasks.named("clean") {
     doLast {
         println("Cleaning Hermes Android project")
